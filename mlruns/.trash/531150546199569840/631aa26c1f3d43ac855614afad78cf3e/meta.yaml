@@ -1,0 +1,16 @@
+artifact_uri: file:///home/XGB_vast_mlflow_results/.mlruns/531150546199569840/631aa26c1f3d43ac855614afad78cf3e/artifacts
+deleted_time: 1737032556259
+end_time: 1736186066621
+entry_point_name: ''
+experiment_id: '531150546199569840'
+lifecycle_stage: deleted
+run_id: 631aa26c1f3d43ac855614afad78cf3e
+run_name: LightGBM_RandomSearch_Run
+run_uuid: 631aa26c1f3d43ac855614afad78cf3e
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1736186000710
+status: 4
+tags: []
+user_id: root

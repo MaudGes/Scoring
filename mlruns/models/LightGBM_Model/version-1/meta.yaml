@@ -1,0 +1,14 @@
+aliases: []
+creation_timestamp: 1737047656281
+current_stage: None
+description: null
+last_updated_timestamp: 1737047656281
+name: LightGBM_Model
+run_id: 97b6dc556c244e5aa266ff9cbfd7f55c
+run_link: null
+source: file:///home/XGB_vast_mlflow_results/.mlruns/754955689425690561/97b6dc556c244e5aa266ff9cbfd7f55c/artifacts/Light_GBM
+status: READY
+status_message: null
+storage_location: file:///home/XGB_vast_mlflow_results/.mlruns/754955689425690561/97b6dc556c244e5aa266ff9cbfd7f55c/artifacts/Light_GBM
+user_id: null
+version: 1

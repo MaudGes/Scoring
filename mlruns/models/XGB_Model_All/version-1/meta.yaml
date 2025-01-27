@@ -1,0 +1,14 @@
+aliases: []
+creation_timestamp: 1736873331187
+current_stage: None
+description: null
+last_updated_timestamp: 1736873331187
+name: XGB_Model_All
+run_id: 798ca431a3944800bbac974429c8f8e7
+run_link: null
+source: file:///home/XGB_vast_mlflow_results/.mlruns/713789137625207789/798ca431a3944800bbac974429c8f8e7/artifacts/xgb_model
+status: READY
+status_message: null
+storage_location: file:///home/XGB_vast_mlflow_results/.mlruns/713789137625207789/798ca431a3944800bbac974429c8f8e7/artifacts/xgb_model
+user_id: null
+version: 1

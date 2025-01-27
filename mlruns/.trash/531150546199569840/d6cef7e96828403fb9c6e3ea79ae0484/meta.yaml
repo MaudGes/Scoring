@@ -1,0 +1,16 @@
+artifact_uri: file:///home/XGB_vast_mlflow_results/.mlruns/531150546199569840/d6cef7e96828403fb9c6e3ea79ae0484/artifacts
+deleted_time: 1737032556259
+end_time: null
+entry_point_name: ''
+experiment_id: '531150546199569840'
+lifecycle_stage: deleted
+run_id: d6cef7e96828403fb9c6e3ea79ae0484
+run_name: honorable-kite-205
+run_uuid: d6cef7e96828403fb9c6e3ea79ae0484
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1736186066624
+status: 1
+tags: []
+user_id: root

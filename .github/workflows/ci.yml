@@ -1,0 +1,40 @@
+name: CI P7 Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy (e.g., dev, prod)'
+        required: true
+        default: 'dev'
+      model_path:
+        description: 'Path to the MLflow model'
+        required: true
+        default: 'mlflow_model/'  # Default path
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install --user -r requirements.txt
+
+    - name: Run tests
+      run: |
+        pytest pytest_tests.py --cov=pipeline --cov-report=xml
+
+    - name: Deploy Model # To change to deploy on AWS 
+      if: success()  # Execute only if tests succeed
+      run: |
+        mlflow models serve --model-uri ${{ github.event.inputs.model_path }} --no-conda
