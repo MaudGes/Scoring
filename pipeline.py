@@ -26,8 +26,8 @@ def one_hot_encoder(df, nan_as_category = True):
 # Preprocess application_train.csv and application_test.csv
 def application_test(num_rows = None, nan_as_category = False):
     # Read data and merge
-    test_df = pd.read_csv('application_test.csv')
-    df = pd.read_csv('application_train.csv')
+    test_df = pd.read_csv('credit_files/application_test.csv')
+    df = pd.read_csv('credit_files/application_train.csv')
     print("Test samples: {}".format(len(test_df)))
     
     # Merging
