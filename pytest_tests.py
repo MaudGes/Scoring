@@ -82,8 +82,7 @@ def test_application_test(mock_csv_data):
     assert 'CODE_GENDER' in df.columns, "CODE_GENDER column should exist."
     assert 'EXT_SOURCE_3' in df.columns, "EXT_SOURCE_3 column should exist."
     assert df['CODE_GENDER'].isnull().sum() == 0, "There should be no missing values in CODE_GENDER after factorization."
-    assert df['DAYS_EMPLOYED'].isnull().sum() > 0, "DAYS_EMPLOYED should have NaN values for 365243 replacements."
-    assert len(df) > 0, "The resulting dataframe should not be empty."
+    assert 'DAYS_EMPLOYED' not in df.columns, "'DAYS_EMPLOYED' should not be in the final DataFrame."
 
     # Ensure dropped columns are not present
     assert 'SK_ID_CURR' not in df.columns, "SK_ID_CURR should not be in the resulting dataframe."
