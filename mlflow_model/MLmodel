@@ -13,10 +13,7 @@ flavors:
     serialization_format: cloudpickle
     sklearn_version: 1.5.0
 mlflow_version: 2.19.0
-<<<<<<< HEAD
 
-=======
->>>>>>> 3939eb3 (Model&Pipeline_simplification)
 model_size_bytes: 429484
 model_uuid: ffb5308a77b843e4887cdea5eefdd69e
 signature:
@@ -32,8 +29,4 @@ signature:
     "required": true}]'
   outputs: '[{"type": "double", "name": "TARGET", "required": true}]'
   params: null
-<<<<<<< HEAD
 utc_time_created: '2025-01-22 15:46:21.028429'
-=======
-utc_time_created: '2025-01-22 15:46:21.028429'
->>>>>>> 3939eb3 (Model&Pipeline_simplification)
