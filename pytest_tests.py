@@ -52,7 +52,7 @@ def mock_csv_data():
         'TARGET': [0, 1, 1]
     })
 
-    application_test = pd.DataFrame({
+    mock_test_data = pd.DataFrame({
         'CODE_GENDER': ['M', 'F'],
         'FLAG_OWN_CAR': ['N', 'N'],
         'FLAG_OWN_REALTY': ['Y', 'N'],
@@ -68,14 +68,15 @@ def mock_csv_data():
         'FLAG_EMP_PHONE': [1, 0]
     })
 
-    return application_train, application_test
+    return application_train, mock_test_data
+
 
 def test_application_test(mock_csv_data):
-    application_train, application_test = mock_csv_data
+    application_train, mock_test_data = mock_csv_data
 
     # Mock pd.read_csv
-    with patch('pandas.read_csv', side_effect=[application_test, application_train]):
-        df = application_test()
+    with patch('pandas.read_csv', side_effect=[mock_test_data, application_train]):
+        df = application_test()  # Call the actual function being tested
 
     # Ensure test data is merged and cleaned properly
     assert 'CODE_GENDER' in df.columns, "CODE_GENDER column should exist."
