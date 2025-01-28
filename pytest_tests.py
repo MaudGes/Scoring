@@ -23,9 +23,10 @@ def test_one_hot_encoder():
     assert 'A_nan' in df_encoded.columns, "NaN category should be included when nan_as_category is True."
     assert 'C_yes' in df_encoded.columns
     assert 'C_no' in df_encoded.columns
+    assert 'C_nan' in df_encoded.columns, "NaN category should be included for column C when nan_as_category is True."
 
     # Check that new columns match the returned new_columns
-    expected_new_columns = ['A_cat', 'A_dog', 'A_nan', 'C_yes', 'C_no']
+    expected_new_columns = ['A_cat', 'A_dog', 'A_nan', 'C_yes', 'C_no', 'C_nan']
     assert set(new_columns) == set(expected_new_columns), "Returned new columns do not match expected columns."
 
     # Check that original columns are not removed
