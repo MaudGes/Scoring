@@ -1,0 +1,71 @@
+name: CI P7 Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy (e.g., dev, prod)'
+        required: true
+        default: 'dev'
+      model_path:
+        description: 'Path to the MLflow model'
+        required: true
+        default: 'mlflow_model/'  # Default path
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install --user -r requirements.txt
+
+    - name: Run tests
+      run: |
+        pytest pytest_tests.py --cov=pipeline --cov-report=xml
+
+  deploy:
+    needs: test  # Ensure deployment only happens if tests pass
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    - name: Upload Model to S3
+      run: |
+        aws s3 cp ${{ github.event.inputs.model_path }} s3://${{ secrets.S3_BUCKET_NAME }}/mlflow-models/
+
+    - name: Deploy Model on SageMaker
+      run: |
+        aws sagemaker create-model \
+          --model-name "mlflow-deployed-model" \
+          --primary-container Image="123456789012.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/mlflow_model_image:latest",ModelDataUrl="s3://${{ secrets.S3_BUCKET_NAME }}/mlflow-models/" \
+          --execution-role-arn ${{ secrets.SAGEMAKER_ROLE_ARN }}
+
+    - name: Create SageMaker Endpoint
+      run: |
+        aws sagemaker create-endpoint-config \
+          --endpoint-config-name "mlflow-endpoint-config" \
+          --production-variants '[{"VariantName":"AllTraffic","ModelName":"mlflow-deployed-model","InstanceType":"ml.m5.large","InitialInstanceCount":1}]'
+
+        aws sagemaker create-endpoint \
+          --endpoint-name "mlflow-endpoint" \
+          --endpoint-config-name "mlflow-endpoint-config"
