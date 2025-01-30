@@ -51,7 +51,7 @@ jobs:
 
     - name: Upload Model to S3
       run: |
-        aws s3 cp ${{ github.event.inputs.model_path }} s3://${{ secrets.S3_BUCKET_NAME }}/mlflow-models/
+        aws s3 cp ${{ github.event.inputs.model_path }} s3://${{ secrets.S3_BUCKET_NAME }}/mlflow-models/ --recursive
 
     - name: Deploy Model on SageMaker
       run: |
