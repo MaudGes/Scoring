@@ -15,6 +15,14 @@ import mlflow
 import mlflow.sklearn
 import warnings
 
+"""
+Pipeline used to easily define the model preprocessing steps. The pipeline is then stored using joblib. 
+The model's signature is also saved to be able to reuse it later while deploying the model.
+The model itself is then stored along with other files in the 'mlflow_model' folder
+
+The selected hyperparaters for xgboost come from previous testing and results stored in mlflow (see mlruns folder)
+"""
+
 # One-hot encoding for categorical columns with get_dummies
 def one_hot_encoder(df, nan_as_category = True):
     original_columns = list(df.columns)

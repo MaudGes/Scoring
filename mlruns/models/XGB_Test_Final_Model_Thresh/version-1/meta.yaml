@@ -1,0 +1,14 @@
+aliases: []
+creation_timestamp: 1738248580333
+current_stage: None
+description: null
+last_updated_timestamp: 1738248580333
+name: XGB_Test_Final_Model_Thresh
+run_id: e2fddd78231f4613868bc178c23839b8
+run_link: null
+source: file:///home/XGB_vast_mlflow_results/.mlruns/464564443141523204/e2fddd78231f4613868bc178c23839b8/artifacts/xgb_test_model
+status: READY
+status_message: null
+storage_location: file:///home/XGB_vast_mlflow_results/.mlruns/464564443141523204/e2fddd78231f4613868bc178c23839b8/artifacts/xgb_test_model
+user_id: null
+version: 1

@@ -1,0 +1,6 @@
+artifact_location: file:///home/XGB_vast_mlflow_results/.mlruns/464564443141523204
+creation_time: 1738248529079
+experiment_id: '464564443141523204'
+last_update_time: 1738248529079
+lifecycle_stage: active
+name: XGB Test with threshold

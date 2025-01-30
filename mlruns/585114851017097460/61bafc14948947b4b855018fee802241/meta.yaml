@@ -1,0 +1,15 @@
+artifact_uri: file:///home/XGB_vast_mlflow_results/.mlruns/585114851017097460/61bafc14948947b4b855018fee802241/artifacts
+end_time: 1738248529022
+entry_point_name: ''
+experiment_id: '585114851017097460'
+lifecycle_stage: active
+run_id: 61bafc14948947b4b855018fee802241
+run_name: XGB_Run_Thresh_0.004_20250130_144619
+run_uuid: 61bafc14948947b4b855018fee802241
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1738248379115
+status: 3
+tags: []
+user_id: root

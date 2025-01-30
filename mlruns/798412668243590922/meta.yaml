@@ -1,0 +1,6 @@
+artifact_location: file:///home/XGB_vast_mlflow_results/.mlruns/798412668243590922
+creation_time: 1738248580456
+experiment_id: '798412668243590922'
+last_update_time: 1738248580456
+lifecycle_stage: active
+name: LGBM_Experiments2

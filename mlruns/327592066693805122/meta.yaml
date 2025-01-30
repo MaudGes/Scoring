@@ -1,6 +1,0 @@
-artifact_location: file:///home/XGB_vast_mlflow_results/.mlruns/327592066693805122
-creation_time: 1736889622662
-experiment_id: '327592066693805122'
-last_update_time: 1736889622662
-lifecycle_stage: active
-name: XGB with threshold
