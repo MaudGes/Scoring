@@ -57,10 +57,10 @@ jobs:
       run: |
         aws sagemaker create-model \
           --model-name "mlflow-deployed-model" \
-          --primary-container '{
+          --primary-container "$(echo '{
               "Image": "763104351884.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/sagemaker-scikit-learn:1.2-ubuntu20.04",
               "ModelDataUrl": "s3://${{ secrets.S3_BUCKET_NAME }}/mlflow-models/"
-          }' \
+          }' | jq -c)" \
           --execution-role-arn ${{ secrets.SAGEMAKER_ROLE_ARN }}
 
     - name: Create SageMaker Endpoint
