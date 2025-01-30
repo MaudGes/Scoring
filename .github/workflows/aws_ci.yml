@@ -1,4 +1,4 @@
-name: CI P7 Pipeline
+name: AWS CI P7 Pipeline
 
 on:
   workflow_dispatch:
