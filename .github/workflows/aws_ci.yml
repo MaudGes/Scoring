@@ -58,7 +58,7 @@ jobs:
         aws sagemaker create-model \
           --model-name "mlflow-deployed-model" \
           --primary-container '{
-            "Image": "763104351884.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/sagemaker-xgboost:1.2-1-cpu-py3", 
+            "Image": "811479661038.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/sagemaker-xgboost:1.2-1-cpu-py3", 
             "ModelDataUrl": "s3://${{ secrets.S3_BUCKET_NAME }}/mlflow-models/",
             "Environment": {
               "SAGEMAKER_PROGRAM": "inference.py"
@@ -75,3 +75,4 @@ jobs:
         aws sagemaker create-endpoint \
           --endpoint-name "mlflow-endpoint" \
           --endpoint-config-name "mlflow-endpoint-config"
+
