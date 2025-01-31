@@ -2,17 +2,5 @@ $schema: https://azuremlschemas.azureedge.net/latest/environment.schema.json
 name: mlflow-env
 version: 1
 image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04
-conda_file:
-  name: mlflow-env
-  dependencies:
-    - python=3.11
-    - pip:
-      - mlflow==2.19.0
-      - cloudpickle==3.1.1
-      - numpy==2.1.2
-      - pandas==2.2.3
-      - psutil==6.1.0
-      - scikit-learn==1.5.0
-      - scipy==1.15.1
-      - xgboost==2.1.3
+conda_file: conda_dependencies.yml
 description: "Custom environment for MLflow model deployment"
