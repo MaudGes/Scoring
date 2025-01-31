@@ -48,16 +48,16 @@ jobs:
     - name: Deploy Model to Azure ML
       if: success()  # Execute only if tests succeed
       run: |
-        # Set Azure ML workspace details
-        az ml workspace set --name your_workspace_name --resource-group your_resource_group
-
+        # Attach to the Azure ML workspace
+        az ml workspace attach --name your_workspace_name --resource-group your_resource_group
+        
         # Register the MLflow model in Azure ML
         az ml model register --name mlflow-model \
             --path ${{ github.event.inputs.model_path }} \
             --workspace-name your_workspace_name \
             --resource-group your_resource_group
         
-        # Deploy the model
+        # Deploy the model to ACI
         az ml model deploy --name mlflow-endpoint \
             --model mlflow-model:1 \
             --workspace-name your_workspace_name \
