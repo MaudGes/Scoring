@@ -13,6 +13,7 @@ on:
         default: 'mlflow_model/'  # Default path
 
 jobs:
+jobs:
   test:
     runs-on: ubuntu-latest
 
@@ -48,8 +49,8 @@ jobs:
     - name: Deploy Model to Azure ML
       if: success()  # Execute only if tests succeed
       run: |
-        # Attach to the Azure ML workspace
-        az ml workspace attach --name your_workspace_name --resource-group your_resource_group
+        # Configure Azure ML workspace
+        az ml workspace configure --name your_workspace_name --resource-group your_resource_group
         
         # Register the MLflow model in Azure ML
         az ml model register --name mlflow-model \
@@ -66,3 +67,4 @@ jobs:
 
         # Check the status of the deployed service
         az ml webservice show --name mlflow-endpoint --workspace-name your_workspace_name --resource-group your_resource_group
+
