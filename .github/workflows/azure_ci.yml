@@ -13,7 +13,6 @@ on:
         default: 'mlflow_model/'  # Default path
 
 jobs:
-jobs:
   test:
     runs-on: ubuntu-latest
 
