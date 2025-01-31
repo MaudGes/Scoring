@@ -35,6 +35,16 @@ jobs:
       run: |
         pytest pytest_tests.py --cov=pipeline --cov-report=xml
 
+    # Log the model_path input
+    - name: Log Model Path
+      run: |
+        echo "Model Path: ${{ github.event.inputs.model_path }}"
+
+    # List the files in the model path directory to verify if the model is there
+    - name: List files in model path
+      run: |
+        ls -R ${{ github.event.inputs.model_path }}
+
     - name: Authenticate with Azure
       run: |
         az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
@@ -48,16 +58,13 @@ jobs:
     - name: Deploy Model to Azure ML
       if: success()  # Execute only if tests succeed
       run: |
-        # Set the Azure ML workspace context
-        az ml workspace set --name P7_Scoring --resource-group Maud
-        
         # Register the MLflow model in Azure ML
         az ml model register --name P7-mlflow-model \
             --path ${{ github.event.inputs.model_path }} \
             --workspace-name P7_Scoring \
             --resource-group Maud
         
-        # Deploy the model to ACI (Azure Container Instance)
+        # Deploy the model to ACI
         az ml model deploy --name P7-mlflow-endpoint \
             --model P7-mlflow-model:1 \
             --workspace-name P7_Scoring \
