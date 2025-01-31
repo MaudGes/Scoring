@@ -53,7 +53,11 @@ jobs:
 
     - name: Install Azure ML CLI extension
       run: |
-        az extension add --name azure-cli-ml
+        # Remove the old extension if it exists
+        az extension remove --name azure-cli-ml
+        
+        # Install the latest Azure ML CLI extension
+        az extension add --name ml
 
     - name: Deploy Model to Azure ML
       if: success()  # Execute only if tests succeed
