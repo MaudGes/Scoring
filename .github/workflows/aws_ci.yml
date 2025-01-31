@@ -73,6 +73,13 @@ jobs:
       - name: Debug - Verify Tarball Contents
         run: tar -tzvf model.tar.gz
 
+      #- name: Deploy Model on SageMaker
+        #run: |
+          #aws sagemaker create-model \
+            #--model-name "mlflow-deployed-model" \
+            #--primary-container "ModelDataUrl=s3://${{ secrets.S3_BUCKET_NAME }}/mlflow-models/model.tar.gz,Environment={SAGEMAKER_PROGRAM=inference.py}" \
+            #--execution-role-arn ${{ secrets.SAGEMAKER_ROLE_ARN }}
+
       - name: Deploy Model on SageMaker
         run: |
           aws sagemaker create-model \
