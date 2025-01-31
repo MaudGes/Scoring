@@ -69,9 +69,9 @@ jobs:
         # Ensure the correct extension is installed
         az extension add --name ml
 
-        # Register the MLflow model in Azure ML
-        az ml model register --name P7-mlflow-model \
-            --model-path ${{ github.event.inputs.model_path }}/model.pkl \
+        # Register the MLflow model in Azure ML (updated command)
+        az ml model create --name P7-mlflow-model \
+            --path ${{ github.event.inputs.model_path }}/model.pkl \
             --workspace-name P7_Scoring \
             --resource-group Maud
 
@@ -91,3 +91,4 @@ jobs:
 
         # Check the status of the deployed service
         az ml online-endpoint show --name mlflow-endpoint --workspace-name P7_Scoring --resource-group Maud
+
