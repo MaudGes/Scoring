@@ -63,17 +63,20 @@ jobs:
       run: |
         az upgrade --yes
 
-    - name: Deploy Model to Azure ML
-      if: success()  # Execute only if tests succeed
+    - name: Register the MLflow model in Azure ML
       run: |
-        # Ensure the correct extension is installed
-        az extension add --name ml
-
-        # Register the MLflow model in Azure ML
-        az ml model create --name P7-mlflow-model \
+        # Register the MLflow model from the GitHub repository
+        az ml model create \
+            --name P7-mlflow-model \
             --path ${{ github.event.inputs.model_path }}/model.pkl \
             --workspace-name P7_Scoring \
             --resource-group Maud
+
+    - name: Deploy Model to Azure ML
+      if: success()  # Execute only if model registration is successful
+      run: |
+        # Ensure the correct extension is installed
+        az extension add --name ml
 
         # Check if the endpoint exists
         if az ml online-endpoint show --name mlflow-endpoint-scoring --workspace-name P7_Scoring --resource-group Maud > /dev/null 2>&1; then
