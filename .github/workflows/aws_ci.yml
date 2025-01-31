@@ -34,6 +34,9 @@ jobs:
       run: |
         pytest pytest_tests.py --cov=pipeline --cov-report=xml
 
+    - name: Debug - Check S3 ModelDataUrl
+      run: aws s3 ls s3://${{ secrets.S3_BUCKET_NAME }}/mlflow-models/model.tar.gz
+
   deploy:
     needs: test  # Ensure deployment only happens if tests pass
     runs-on: ubuntu-latest
