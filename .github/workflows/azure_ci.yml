@@ -59,6 +59,10 @@ jobs:
         # Install the latest Azure ML CLI extension
         az extension add --name ml
 
+    - name: Update Azure CLI
+      run: |
+        az upgrade --yes
+
     - name: Deploy Model to Azure ML
       if: success()  # Execute only if tests succeed
       run: |
