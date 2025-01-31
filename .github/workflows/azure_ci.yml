@@ -1,0 +1,64 @@
+name: Azure CI P7 Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy (e.g., dev, prod)'
+        required: true
+        default: 'dev'
+      model_path:
+        description: 'Path to the MLflow model'
+        required: true
+        default: 'mlflow_model/'  # Default path
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install --user -r requirements.txt
+        pip install azureml-sdk mlflow
+
+    - name: Run tests
+      run: |
+        pytest pytest_tests.py --cov=pipeline --cov-report=xml
+
+    - name: Authenticate with Azure
+      run: |
+        az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+        az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        az account show  # Verifier que l'authentification a réussi
+
+    - name: Deploy Model to Azure ML
+      if: success()  # Execute only if tests succeed
+      run: |
+        # Set Azure ML workspace details
+        az ml workspace set --name your_workspace_name --resource-group your_resource_group
+
+        # Deploy the MLflow model using Azure ML
+        az ml model register --name mlflow-model \
+            --path ${{ github.event.inputs.model_path }} \
+            --workspace-name your_workspace_name \
+            --resource-group your_resource_group
+        
+        # Deploy the model
+        az ml model deploy --name mlflow-endpoint \
+            --model mlflow-model:1 \
+            --workspace-name your_workspace_name \
+            --resource-group your_resource_group \
+            --aci --no-wait
+
+        # Optionally check the status of the deployed service
+        az ml webservice show --name mlflow-endpoint --workspace-name your_workspace_name --resource-group your_resource_group
