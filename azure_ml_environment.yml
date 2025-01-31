@@ -1,6 +1,7 @@
-$schema: https://azuremlschemas.azureedge.net/latest/environment.schema.json
-name: mlflow-env
-version: 5
-image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04
-conda_file: conda_dependencies.yml
-description: "Custom environment for MLflow model deployment"
+name: my-custom-environment
+version: 6
+image:
+  conda_file: environment.yml  # Optional, use if you want to specify Conda dependencies
+  docker:
+    image: ${{ secrets.AZURE_ACR_NAME }}.azurecr.io/mlflow-model:latest  # Full Docker image path
+    registry: ${{ secrets.AZURE_ACR_NAME }}.azurecr.io  # Registry URL
