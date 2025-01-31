@@ -65,10 +65,14 @@ jobs:
       run: |
         docker build -t mlflow-model .
 
-    # Push the Docker image to Azure Container Registry (ACR)
-    - name: Push Docker image to ACR
+    # Step to log in to Azure Container Registry
+    - name: Log in to Azure Container Registry
       run: |
-        az acr login --name ${{ secrets.ACR_NAME }}
+        az acr login --name ${{ secrets.AZURE_ACR_NAME }}
+
+    # Tag the Docker image with the correct ACR format and push it
+    - name: Tag and Push Docker image to ACR
+      run: |
         docker tag mlflow-model ${{ secrets.AZURE_ACR_NAME }}.azurecr.io/mlflow-model:latest
         docker push ${{ secrets.AZURE_ACR_NAME }}.azurecr.io/mlflow-model:latest
 
@@ -77,7 +81,7 @@ jobs:
       run: |
         az ml environment create --file azure_ml_environment.yml --workspace-name P7_Scoring --resource-group Maud
 
-    # Register and deploy the model
+    # Register and deploy the model to Azure ML
     - name: Register the MLflow model in Azure ML
       run: |
         az ml model create \
