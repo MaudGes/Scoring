@@ -1,4 +1,3 @@
 $schema: https://azuremlschemas.azureedge.net/schemas/environment/2.0.0/environment.schema.json
 name: mlflow-environment
-image:
-  uri: "${{ secrets.AZURE_ACR_NAME }}.azurecr.io/mlflow-model:latest"
+image: "${{ secrets.AZURE_ACR_NAME }}.azurecr.io/mlflow-model:latest"
