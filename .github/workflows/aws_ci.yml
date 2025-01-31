@@ -73,11 +73,18 @@ jobs:
       - name: Debug - Verify Tarball Contents
         run: tar -tzvf model.tar.gz
 
+      #- name: Deploy Model on SageMaker
+        #run: |
+          #aws sagemaker create-model \
+            #--model-name "mlflow-deployed-model" \
+            #--primary-container "ModelDataUrl=s3://${{ secrets.S3_BUCKET_NAME }}/mlflow-models/model.tar.gz,Environment={SAGEMAKER_PROGRAM=inference.py}" \
+            #--execution-role-arn ${{ secrets.SAGEMAKER_ROLE_ARN }}
+
       - name: Deploy Model on SageMaker
         run: |
           aws sagemaker create-model \
             --model-name "mlflow-deployed-model" \
-            --primary-container "ModelDataUrl=s3://${{ secrets.S3_BUCKET_NAME }}/mlflow-models/model.tar.gz,Environment={SAGEMAKER_PROGRAM=inference.py}" \
+            --primary-container "Image=python:3.8-slim,ModelDataUrl=https://***.s3.***.amazonaws.com/mlflow-models/model.tar.gz?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=***%2F20250131%2F***%2Fs3%2Faws4_request&X-Amz-Date=20250131T093909Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=736e1fda6d18d20f561bedd7d428b21ee901bd7813644f21de1b6f830ce29b51,Environment={SAGEMAKER_PROGRAM=inference.py}" \
             --execution-role-arn ${{ secrets.SAGEMAKER_ROLE_ARN }}
 
       - name: Create SageMaker Endpoint

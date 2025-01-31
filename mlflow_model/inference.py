@@ -9,7 +9,7 @@ from sagemaker_inference import content_types, response_types
 
 def model_fn(model_dir):
     """Load the model from the model_dir (where SageMaker places the model)."""
-    model_path = os.path.join(model_dir, 'model', 'model.pkl')
+    model_path = os.path.join(model_dir, 'model.pkl')
     # Load the model using cloudpickle or pickle
     with open(model_path, 'rb') as f:
         model = cloudpickle.load(f)  # Using cloudpickle to ensure compatibility with MLflow models
