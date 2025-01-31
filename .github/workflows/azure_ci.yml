@@ -68,9 +68,10 @@ jobs:
     # Step to log in to Azure Container Registry
     - name: Log in to Azure Container Registry
       run: |
+        echo "Logging in to Azure Container Registry..."
         az acr login --name ${{ secrets.AZURE_ACR_NAME }}
 
-    # Tag the Docker image with the correct ACR format and push it
+    # Tag and Push Docker image to ACR
     - name: Tag and Push Docker image to ACR
       run: |
         docker tag mlflow-model ${{ secrets.AZURE_ACR_NAME }}.azurecr.io/mlflow-model:latest
