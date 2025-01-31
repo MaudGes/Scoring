@@ -81,9 +81,15 @@ jobs:
         docker tag mlflow-model ${{ secrets.AZURE_ACR_NAME }}.azurecr.io/mlflow-model:latest
         docker push ${{ secrets.AZURE_ACR_NAME }}.azurecr.io/mlflow-model:latest
 
+    # Step to create custom environment on Azure ML with the Docker image URI
     - name: Create custom environment on Azure ML
       run: |
-        az ml environment create --file azure_ml_environment.yml --workspace-name P7_Scoring --resource-group Maud --debug
+        IMAGE_URI="${{ secrets.AZURE_ACR_NAME }}.azurecr.io/mlflow-model:latest"
+        az ml environment create --file azure_ml_environment.yml \
+          --workspace-name P7_Scoring \
+          --resource-group Maud \
+          --docker-image-uri $IMAGE_URI \
+          --debug
 
     # Register and deploy the model to Azure ML
     - name: Register the MLflow model in Azure ML
