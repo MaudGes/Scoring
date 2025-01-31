@@ -6,5 +6,5 @@ model:
   version: 1
 environment: 
   name: mlflow-env
-  version: 6
+  version: 8
 instance_type: Standard_DS3_v2

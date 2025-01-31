@@ -1,7 +1,6 @@
 name: my-custom-environment
-version: 6
-image:
-  conda_file: environment.yml  # Optional, use if you want to specify Conda dependencies
-  docker:
-    image: ${{ secrets.AZURE_ACR_NAME }}.azurecr.io/mlflow-model:latest  # Full Docker image path
-    registry: ${{ secrets.AZURE_ACR_NAME }}.azurecr.io  # Registry URL
+name: my-custom-environment
+version: 8
+docker:
+  image: ${{ secrets.AZURE_ACR_NAME }}.azurecr.io/mlflow-model:latest
+  registry: ${{ secrets.AZURE_ACR_NAME }}.azurecr.io
