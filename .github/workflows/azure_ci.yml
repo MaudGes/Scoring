@@ -60,14 +60,26 @@ jobs:
       run: |
         az upgrade --yes
 
-    # Step to create the environment from the environment.yml file
+    # Step to build Docker image
+    - name: Build Docker image for model
+      run: |
+        docker build -t mlflow-model .
+
+    # Push the Docker image to Azure Container Registry (ACR)
+    - name: Push Docker image to ACR
+      run: |
+        az acr login --name ${{ secrets.AZURE_ACR_NAME }}
+        docker tag mlflow-model ${{ secrets.AZURE_ACR_NAME }}.azurecr.io/mlflow-model:latest
+        docker push ${{ secrets.AZURE_ACR_NAME }}.azurecr.io/mlflow-model:latest
+
+    # Step to create the environment on Azure ML
     - name: Create custom environment on Azure ML
       run: |
         az ml environment create --file azure_ml_environment.yml --workspace-name P7_Scoring --resource-group Maud
 
+    # Register and deploy the model
     - name: Register the MLflow model in Azure ML
       run: |
-        # Register the MLflow model from the GitHub repository
         az ml model create \
             --name P7-mlflow-model \
             --path ${{ github.event.inputs.model_path }}/model.pkl \
