@@ -35,9 +35,8 @@ jobs:
         pytest pytest_tests.py --cov=pipeline --cov-report=xml
 
   deploy:
-    needs: test  # Ensure deployment only happens if tests pass
+    needs: test
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -52,6 +51,15 @@ jobs:
           exit 1;
         fi
 
+    - name: Debug - Check S3 ModelDataUrl
+      run: aws s3 ls s3://${{ secrets.S3_BUCKET_NAME }}/mlflow-models/model.tar.gz
+
+    - name: Debug - Get S3 Object URL
+      run: aws s3 presign s3://${{ secrets.S3_BUCKET_NAME }}/mlflow-models/model.tar.gz
+
+    - name: Debug - Verify Tarball Contents
+      run: tar -tzvf model.tar.gz
+
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v2
       with:
@@ -65,19 +73,11 @@ jobs:
     - name: Upload Model to S3
       run: aws s3 cp model.tar.gz s3://${{ secrets.S3_BUCKET_NAME }}/mlflow-models/model.tar.gz
 
-    - name: Debug - Check S3 ModelDataUrl
-      run: aws s3 ls s3://${{ secrets.S3_BUCKET_NAME }}/mlflow-models/model.tar.gz
-
     - name: Deploy Model on SageMaker
       run: |
         aws sagemaker create-model \
           --model-name "mlflow-deployed-model" \
-          --primary-container '{
-            "ModelDataUrl": "s3://${{ secrets.S3_BUCKET_NAME }}/mlflow-models/model.tar.gz",
-            "Environment": {
-              "SAGEMAKER_PROGRAM": "inference.py"
-            }
-          }' \
+          --primary-container "ModelDataUrl=s3://${{ secrets.S3_BUCKET_NAME }}/mlflow-models/model.tar.gz,Environment={SAGEMAKER_PROGRAM=inference.py}" \
           --execution-role-arn ${{ secrets.SAGEMAKER_ROLE_ARN }}
 
     - name: Create SageMaker Endpoint
@@ -89,5 +89,3 @@ jobs:
         aws sagemaker create-endpoint \
           --endpoint-name "mlflow-endpoint" \
           --endpoint-config-name "mlflow-endpoint-config"
-
-
