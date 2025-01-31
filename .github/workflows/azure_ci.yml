@@ -61,7 +61,9 @@ jobs:
 
     - name: Check if model version 20 exists
       run: |
-        model_version=$(az ml model show --name P7-mlflow-model --workspace-name P7_Scoring --resource-group Maud --query "version" -o tsv)
+        # Vérifier si la version 20 du modèle existe
+        model_version=$(az ml model show --name P7-mlflow-model --version 20 --workspace-name P7_Scoring --resource-group Maud --query "version" -o tsv)
+        
         if [[ "$model_version" == "20" ]]; then
             echo "Version 20 already exists, skipping registration."
         else
