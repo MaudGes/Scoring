@@ -90,9 +90,8 @@ jobs:
         run: |
           aws sagemaker create-model \
             --model-name "mlflow-deployed-model" \
-            --primary-container "ModelDataUrl=s3://${{ secrets.S3_BUCKET_NAME }}/mlflow-models/model.tar.gz,Environment={\"SAGEMAKER_PROGRAM\":\"inference.py\"}" \
+            --primary-container "ModelDataUrl=s3://${{ secrets.S3_BUCKET_NAME }}/mlflow-models/model.tar.gz,Environment={SAGEMAKER_PROGRAM=inference.py}" \
             --execution-role-arn ${{ secrets.SAGEMAKER_ROLE_ARN }}
-
 
       - name: Create SageMaker Endpoint
         run: |
