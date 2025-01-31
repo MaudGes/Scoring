@@ -23,7 +23,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.11.10'
+        python-version: '3.8'
 
     - name: Install dependencies
       run: |
@@ -53,23 +53,26 @@ jobs:
 
     - name: Install Azure ML CLI extension
       run: |
+        # Install the latest Azure ML CLI extension
         az extension add --name ml
 
     - name: Update Azure CLI
       run: |
         az upgrade --yes
 
-    - name: Check if model version 20 exists
+    # Step to create the environment from the environment.yml file
+    - name: Create custom environment on Azure ML
       run: |
-        # Vérifier si la version 20 du modèle existe
-        model_version=$(az ml model show --name P7-mlflow-model --version 20 --workspace-name P7_Scoring --resource-group Maud --query "version" -o tsv)
-        
-        if [[ "$model_version" == "20" ]]; then
-            echo "Version 20 already exists, skipping registration."
-        else
-            echo "Version 20 not found, registering the model."
-            az ml model create --name P7-mlflow-model --path ${{ github.event.inputs.model_path }}/model.pkl --workspace-name P7_Scoring --resource-group Maud
-        fi
+        az ml environment create --name mlflow-env --file environment.yml --workspace-name P7_Scoring --resource-group Maud
+
+    - name: Register the MLflow model in Azure ML
+      run: |
+        # Register the MLflow model from the GitHub repository
+        az ml model create \
+            --name P7-mlflow-model \
+            --path ${{ github.event.inputs.model_path }}/model.pkl \
+            --workspace-name P7_Scoring \
+            --resource-group Maud
 
     - name: Deploy Model to Azure ML
       if: success()  # Execute only if model registration is successful
