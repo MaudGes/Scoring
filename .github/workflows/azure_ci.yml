@@ -39,7 +39,11 @@ jobs:
       run: |
         az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
         az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-        az account show  # Verifier que l'authentification a réussi
+        az account show  # Check authentication success
+
+    - name: Install Azure ML CLI extension
+      run: |
+        az extension add --name azure-cli-ml
 
     - name: Deploy Model to Azure ML
       if: success()  # Execute only if tests succeed
@@ -47,7 +51,7 @@ jobs:
         # Set Azure ML workspace details
         az ml workspace set --name your_workspace_name --resource-group your_resource_group
 
-        # Deploy the MLflow model using Azure ML
+        # Register the MLflow model in Azure ML
         az ml model register --name mlflow-model \
             --path ${{ github.event.inputs.model_path }} \
             --workspace-name your_workspace_name \
@@ -60,5 +64,5 @@ jobs:
             --resource-group your_resource_group \
             --aci --no-wait
 
-        # Optionally check the status of the deployed service
+        # Check the status of the deployed service
         az ml webservice show --name mlflow-endpoint --workspace-name your_workspace_name --resource-group your_resource_group
