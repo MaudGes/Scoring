@@ -38,54 +38,54 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Debug - Check Model Directory
-      run: |
-        if [ -d "mlflow_model" ]; then 
-          echo "mlflow_model exists!";
-          ls -R mlflow_model;
-        else 
-          echo "Directory mlflow_model NOT FOUND!";
-          exit 1;
-        fi
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-    - name: Debug - Check S3 ModelDataUrl
-      run: aws s3 ls s3://${{ secrets.S3_BUCKET_NAME }}/mlflow-models/model.tar.gz
+      - name: Create Model Tarball
+        run: tar -czvf model.tar.gz -C mlflow_model .
 
-    - name: Debug - Get S3 Object URL
-      run: aws s3 presign s3://${{ secrets.S3_BUCKET_NAME }}/mlflow-models/model.tar.gz
+      - name: Upload Model to S3
+        run: aws s3 cp model.tar.gz s3://${{ secrets.S3_BUCKET_NAME }}/mlflow-models/model.tar.gz
 
-    - name: Debug - Verify Tarball Contents
-      run: tar -tzvf model.tar.gz
+      - name: Debug - Check Model Directory
+        run: |
+          if [ -d "mlflow_model" ]; then 
+            echo "mlflow_model exists!";
+            ls -R mlflow_model;
+          else 
+            echo "Directory mlflow_model NOT FOUND!";
+            exit 1;
+          fi
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v2
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
+      - name: Debug - Check S3 ModelDataUrl
+        run: aws s3 ls s3://${{ secrets.S3_BUCKET_NAME }}/mlflow-models/model.tar.gz
 
-    - name: Create Model Tarball
-      run: tar -czvf model.tar.gz -C mlflow_model .
+      - name: Debug - Get S3 Object URL
+        run: aws s3 presign s3://${{ secrets.S3_BUCKET_NAME }}/mlflow-models/model.tar.gz
 
-    - name: Upload Model to S3
-      run: aws s3 cp model.tar.gz s3://${{ secrets.S3_BUCKET_NAME }}/mlflow-models/model.tar.gz
+      - name: Debug - Verify Tarball Contents
+        run: tar -tzvf model.tar.gz
 
-    - name: Deploy Model on SageMaker
-      run: |
-        aws sagemaker create-model \
-          --model-name "mlflow-deployed-model" \
-          --primary-container "ModelDataUrl=s3://${{ secrets.S3_BUCKET_NAME }}/mlflow-models/model.tar.gz,Environment={SAGEMAKER_PROGRAM=inference.py}" \
-          --execution-role-arn ${{ secrets.SAGEMAKER_ROLE_ARN }}
+      - name: Deploy Model on SageMaker
+        run: |
+          aws sagemaker create-model \
+            --model-name "mlflow-deployed-model" \
+            --primary-container "ModelDataUrl=s3://${{ secrets.S3_BUCKET_NAME }}/mlflow-models/model.tar.gz,Environment={SAGEMAKER_PROGRAM=inference.py}" \
+            --execution-role-arn ${{ secrets.SAGEMAKER_ROLE_ARN }}
 
-    - name: Create SageMaker Endpoint
-      run: |
-        aws sagemaker create-endpoint-config \
-          --endpoint-config-name "mlflow-endpoint-config" \
-          --production-variants '[{"VariantName":"AllTraffic","ModelName":"mlflow-deployed-model","InstanceType":"ml.m5.large","InitialInstanceCount":1}]'
+      - name: Create SageMaker Endpoint
+        run: |
+          aws sagemaker create-endpoint-config \
+            --endpoint-config-name "mlflow-endpoint-config" \
+            --production-variants '[{"VariantName":"AllTraffic","ModelName":"mlflow-deployed-model","InstanceType":"ml.m5.large","InitialInstanceCount":1}]'
 
-        aws sagemaker create-endpoint \
-          --endpoint-name "mlflow-endpoint" \
-          --endpoint-config-name "mlflow-endpoint-config"
+          aws sagemaker create-endpoint \
+            --endpoint-name "mlflow-endpoint" \
+            --endpoint-config-name "mlflow-endpoint-config"
