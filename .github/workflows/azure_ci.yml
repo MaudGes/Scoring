@@ -68,7 +68,7 @@ jobs:
     # Push the Docker image to Azure Container Registry (ACR)
     - name: Push Docker image to ACR
       run: |
-        az acr login --name ${{ secrets.AZURE_ACR_NAME }}
+        az acr login --name ${{ secrets.ACR_NAME }}
         docker tag mlflow-model ${{ secrets.AZURE_ACR_NAME }}.azurecr.io/mlflow-model:latest
         docker push ${{ secrets.AZURE_ACR_NAME }}.azurecr.io/mlflow-model:latest
 
