@@ -60,7 +60,7 @@ jobs:
       run: |
         # Register the MLflow model in Azure ML
         az ml model register --name P7-mlflow-model \
-            --path ${{ github.event.inputs.model_path }} \
+            --model-path ${{ github.event.inputs.model_path }}/model.pkl \
             --workspace-name P7_Scoring \
             --resource-group Maud
         
