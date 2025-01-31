@@ -48,8 +48,8 @@ jobs:
     - name: Deploy Model to Azure ML
       if: success()  # Execute only if tests succeed
       run: |
-        # Attach to the Azure ML workspace
-        az ml workspace attach --name P7_Scoring --resource-group Maud
+        # Set the Azure ML workspace context
+        az ml workspace set --name P7_Scoring --resource-group Maud
         
         # Register the MLflow model in Azure ML
         az ml model register --name P7-mlflow-model \
@@ -57,7 +57,7 @@ jobs:
             --workspace-name P7_Scoring \
             --resource-group Maud
         
-        # Deploy the model to ACI
+        # Deploy the model to ACI (Azure Container Instance)
         az ml model deploy --name P7-mlflow-endpoint \
             --model P7-mlflow-model:1 \
             --workspace-name P7_Scoring \
@@ -66,4 +66,3 @@ jobs:
 
         # Optionally check the status of the deployed service
         az ml webservice show --name P7-mlflow-endpoint --workspace-name P7_Scoring --resource-group Maud
-
