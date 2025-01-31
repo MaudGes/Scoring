@@ -63,7 +63,7 @@ jobs:
     # Step to create the environment from the environment.yml file
     - name: Create custom environment on Azure ML
       run: |
-        az ml environment create --name mlflow-env --file environment.yml --workspace-name P7_Scoring --resource-group Maud
+        az ml environment create --file azure_ml_environment.yml --workspace-name P7_Scoring --resource-group Maud
 
     - name: Register the MLflow model in Azure ML
       run: |
