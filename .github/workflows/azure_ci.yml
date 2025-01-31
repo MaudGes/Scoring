@@ -89,6 +89,14 @@ jobs:
         # Check if the deployment exists
         if az ml online-deployment show --name mlflow-deployment --endpoint-name mlflow-endpoint-scoring --workspace-name P7_Scoring --resource-group Maud > /dev/null 2>&1; then
             echo "Deployment exists. Updating it..."
+            
+            # Delete the existing deployment before updating if it's stuck or failed
+            az ml online-deployment delete --name mlflow-deployment --endpoint-name mlflow-endpoint-scoring --workspace-name P7_Scoring --resource-group Maud --yes
+            
+            # Wait for a moment to ensure the deletion has completed
+            sleep 30
+            
+            # Recreate the deployment
             az ml online-deployment update --name mlflow-deployment \
                 --endpoint-name mlflow-endpoint-scoring \
                 --workspace-name P7_Scoring \
