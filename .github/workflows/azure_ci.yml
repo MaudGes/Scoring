@@ -77,23 +77,34 @@ jobs:
 
         # Check if the endpoint already exists
         if az ml online-endpoint show --name mlflow-endpoint-scoring --workspace-name P7_Scoring --resource-group Maud > /dev/null 2>&1; then
-            echo "Endpoint already exists. Updating deployment..."
+            echo " Endpoint already exists."
         else
-            echo "Creating new endpoint..."
+            echo " Creating new endpoint..."
             az ml online-endpoint create --name mlflow-endpoint-scoring \
                 --workspace-name P7_Scoring \
                 --resource-group Maud \
                 --auth-mode key
         fi
 
-        # Deploy or update the model to the online endpoint
-        az ml online-deployment update --name mlflow-deployment \
-            --endpoint-name mlflow-endpoint-scoring \
-            --workspace-name P7_Scoring \
-            --resource-group Maud \
-            --set model="azureml:P7-mlflow-model:latest" cpu=1 memory=2Gi
+        # Check if the deployment already exists
+        if az ml online-deployment show --name mlflow-deployment --endpoint-name mlflow-endpoint-scoring --workspace-name P7_Scoring --resource-group Maud > /dev/null 2>&1; then
+            echo "Deployment already exists. Updating it..."
+            az ml online-deployment update --name mlflow-deployment \
+                --endpoint-name mlflow-endpoint-scoring \
+                --workspace-name P7_Scoring \
+                --resource-group Maud \
+                --set model="azureml:P7-mlflow-model:latest" cpu=1 memory=2Gi
+        else
+            echo "Deployment does not exist. Creating it..."
+            az ml online-deployment create --name mlflow-deployment \
+                --endpoint-name mlflow-endpoint-scoring \
+                --workspace-name P7_Scoring \
+                --resource-group Maud \
+                --model azureml:P7-mlflow-model:latest \
+                --cpu 1 --memory 2Gi
+        fi
 
-        # Set the new deployment as the default deployment (if needed)
+        # Set the new deployment as the default deployment
         az ml online-endpoint update --name mlflow-endpoint-scoring \
             --workspace-name P7_Scoring \
             --resource-group Maud \
@@ -101,3 +112,4 @@ jobs:
 
         # Check the status of the deployed service
         az ml online-endpoint show --name mlflow-endpoint-scoring --workspace-name P7_Scoring --resource-group Maud
+
