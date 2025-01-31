@@ -76,19 +76,19 @@ jobs:
             --resource-group Maud
 
         # Create an online endpoint for deploying the model
-        az ml online-endpoint create --name P7_mlflow-endpoint \
+        az ml online-endpoint create --name mlflow-endpoint-scoring \
             --workspace-name P7_Scoring \
             --resource-group Maud \
             --auth-mode key
 
         # Deploy the model to the online endpoint
-        az ml online-endpoint deployment create --name P7_mlflow-endpoint \
-            --endpoint-name P7_mlflow-endpoint \
+        az ml online-endpoint deployment create --name mlflow-endpoint-scoring \
+            --endpoint-name mlflow-endpoint-scoring \
             --model P7-mlflow-model:1 \
             --workspace-name P7_Scoring \
             --resource-group Maud \
             --cpu 1 --memory 2.0
 
         # Check the status of the deployed service
-        az ml online-endpoint show --name P7_mlflow-endpoint --workspace-name P7_Scoring --resource-group Maud
+        az ml online-endpoint show --name mlflow-endpoint-scoring --workspace-name P7_Scoring --resource-group Maud
 
