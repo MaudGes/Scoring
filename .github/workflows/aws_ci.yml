@@ -50,7 +50,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Debug: List Model Directory Contents
-        run: ls -R mlflow_model
+        run: ls -R mlflow_model || echo "Directory mlflow_model not found!"
 
       - name: Create Model Tarball
         run: |
