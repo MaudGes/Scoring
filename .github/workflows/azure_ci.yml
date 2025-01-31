@@ -53,24 +53,21 @@ jobs:
 
     - name: Install Azure ML CLI extension
       run: |
-        # Remove the old extension if it exists
-        # az extension remove --name azure-cli-ml
-        
-        # Install the latest Azure ML CLI extension
         az extension add --name ml
 
     - name: Update Azure CLI
       run: |
         az upgrade --yes
 
-    - name: Register the MLflow model in Azure ML
+    - name: Check if model version 20 exists
       run: |
-        # Register the MLflow model from the GitHub repository
-        az ml model create \
-            --name P7-mlflow-model \
-            --path ${{ github.event.inputs.model_path }}/model.pkl \
-            --workspace-name P7_Scoring \
-            --resource-group Maud
+        model_version=$(az ml model show --name P7-mlflow-model --workspace-name P7_Scoring --resource-group Maud --query "version" -o tsv)
+        if [[ "$model_version" == "20" ]]; then
+            echo "Version 20 already exists, skipping registration."
+        else
+            echo "Version 20 not found, registering the model."
+            az ml model create --name P7-mlflow-model --path ${{ github.event.inputs.model_path }}/model.pkl --workspace-name P7_Scoring --resource-group Maud
+        fi
 
     - name: Deploy Model to Azure ML
       if: success()  # Execute only if model registration is successful
