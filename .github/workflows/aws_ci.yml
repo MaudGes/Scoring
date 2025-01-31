@@ -49,9 +49,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Debug: List Model Directory Contents
-        run: ls -R mlflow_model || echo "Directory mlflow_model not found!"
-
       - name: Create Model Tarball
         run: |
           tar -czvf model.tar.gz -C mlflow_model .
