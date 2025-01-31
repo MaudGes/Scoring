@@ -54,7 +54,7 @@ jobs:
     - name: Install Azure ML CLI extension
       run: |
         # Remove the old extension if it exists
-        az extension remove --name azure-cli-ml
+        # az extension remove --name azure-cli-ml
         
         # Install the latest Azure ML CLI extension
         az extension add --name ml
