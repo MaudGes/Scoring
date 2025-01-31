@@ -1,3 +1,16 @@
-$schema: https://azuremlschemas.azureedge.net/schemas/environment/2.0.0/environment.schema.json
-name: mlflow-environment
-image: "{{DOCKER_IMAGE_URI}}"
+$schema: https://azuremlschemas.azureedge.net/latest/environment.schema.json
+name: mlflow-env
+version: 9
+image: ${{ secrets.AZURE_ACR_NAME }}.azurecr.io/mlflow-model:latest
+conda_file: conda_dependencies.yml  # Conda file
+
+inference_config:
+  liveness_route:
+    path: /health
+    port: 5001
+  readiness_route:
+    path: /health
+    port: 5001
+  scoring_route:
+    path: /score
+    port: 5001
