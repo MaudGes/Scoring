@@ -49,12 +49,15 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: List Model Directory Contents  # Optional check for model directory
-        run: ls -l mlflow_model
+      - name: Debug: List Model Directory Contents
+        run: ls -R mlflow_model
 
       - name: Create Model Tarball
         run: |
           tar -czvf model.tar.gz -C mlflow_model .
+
+      - name: Debug: Check Tarball Contents
+        run: tar -tzvf model.tar.gz
 
       - name: Upload Model to S3
         run: |
@@ -64,12 +67,7 @@ jobs:
         run: |
           aws sagemaker create-model \
             --model-name "mlflow-deployed-model" \
-            --primary-container '{
-              "ModelDataUrl": "s3://${{ secrets.S3_BUCKET_NAME }}/mlflow-models/model.tar.gz",
-              "Environment": {
-                "SAGEMAKER_PROGRAM": "inference.py"
-              }
-            }' \
+            --primary-container "Image=683313688378.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/sagemaker-scikit-learn:1.2-1-cpu-py3,ModelDataUrl=s3://${{ secrets.S3_BUCKET_NAME }}/mlflow-models/model.tar.gz" \
             --execution-role-arn ${{ secrets.SAGEMAKER_ROLE_ARN }}
 
       - name: Create SageMaker Endpoint
@@ -81,3 +79,4 @@ jobs:
           aws sagemaker create-endpoint \
             --endpoint-name "mlflow-endpoint" \
             --endpoint-config-name "mlflow-endpoint-config"
+
