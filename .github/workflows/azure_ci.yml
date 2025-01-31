@@ -65,13 +65,17 @@ jobs:
       run: |
         docker build -t mlflow-model .
 
+    # Debugging step to ensure the secret is being read correctly
+    - name: Debug ACR secret
+      run: echo "ACR Name is ${{ secrets.AZURE_ACR_NAME }}"
+
     # Step to log in to Azure Container Registry
     - name: Log in to Azure Container Registry
       run: |
         echo "Logging in to Azure Container Registry..."
         az acr login --name ${{ secrets.AZURE_ACR_NAME }}
 
-    # Tag and Push Docker image to ACR
+    # Tag Docker image and push to ACR
     - name: Tag and Push Docker image to ACR
       run: |
         docker tag mlflow-model ${{ secrets.AZURE_ACR_NAME }}.azurecr.io/mlflow-model:latest
