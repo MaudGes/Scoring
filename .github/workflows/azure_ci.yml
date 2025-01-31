@@ -85,11 +85,15 @@ jobs:
     - name: Set Docker Image URI
       run: echo "DOCKER_IMAGE_URI=${{ secrets.AZURE_ACR_NAME }}.azurecr.io/mlflow-model:latest" >> $GITHUB_ENV
 
-    # Create custom environment on Azure ML using the dynamically resolved Docker image URI
+    # Replace placeholder with actual Docker Image URI in the environment YAML
+    - name: Replace placeholder in environment YAML
+      run: |
+        sed "s|{{DOCKER_IMAGE_URI}}|$DOCKER_IMAGE_URI|" azure_ml_environment.yml > azure_ml_environment_final.yml
+
+    # Create the custom environment in Azure ML
     - name: Create custom environment on Azure ML
       run: |
-        sed "s|{{DOCKER_IMAGE_URI}}|$DOCKER_IMAGE_URI|" azure_ml_environment_template.yml > azure_ml_environment.yml
-        az ml environment create --file azure_ml_environment.yml --workspace-name P7_Scoring --resource-group Maud --debug
+        az ml environment create --file azure_ml_environment_final.yml --workspace-name P7_Scoring --resource-group Maud --debug
 
     # Register and deploy the model to Azure ML
     - name: Register the MLflow model in Azure ML
